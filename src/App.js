@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import IdeaForm from './IdeaForm';
+import Idea from './Idea';
 
-function App() {
+const App = () => {
+  const [ideas, setIdeas] = useState([]);
+
+  const addIdea = (idea) => {
+    const updatedIdeas = [...ideas, idea];
+    setIdeas(updatedIdeas);
+  }
+
+  const markCompleted = (id) => {
+    const updatedIdeas = [...ideas];
+    const matchingIdea = updatedIdeas.find(idea => idea.id === id);
+    matchingIdea.isCompleted = !matchingIdea.isCompleted;
+    setIdeas(updatedIdeas);
+  }
+
+  const removeIdea = (id) => {
+    const updatedIdeas = ideas.filter(idea => idea.id !== id);
+    setIdeas(updatedIdeas);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <section>
+      <h1>IdeaBox with hooks</h1>
+      <IdeaForm addIdea={addIdea}/>
+      {ideas.map(idea =>
+        <Idea
+          key={idea.id}
+          {...idea}
+          markCompleted={markCompleted}
+          removeIdea={removeIdea}
+        />
+      )}
+    </section>
+  )
 }
 
 export default App;
